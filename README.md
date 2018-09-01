@@ -1,1 +1,1 @@
-# Task-Independent-EEG-Identification
+# Task-Independent-EEG-Identification via Low-Rank Matrix Decompsition
