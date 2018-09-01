@@ -1,10 +1,9 @@
 function [ slice ] = STFT( X,time_length )
-%UNTITLED2 此处显示有关此函数的摘要
-%   此处显示详细说明
-channel_num = 22; %62
+
+channel_num = 22; 
 fs = 250;
 windowsize = fs*time_length;
-window = rectwin(windowsize); %使用矩形窗
+window = rectwin(windowsize); 
 nfft = windowsize;
 overlap = 0;    % option:  0,windowsize/2
 
