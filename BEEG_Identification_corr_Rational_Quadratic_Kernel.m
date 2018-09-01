@@ -1,18 +1,14 @@
-%Applying GoDec+ for BEEG classification
+%Applying improved GoDec+ for BEEG classification
 clear
 tic
 
 time_length = 20;
-
 fs = 250;
 [ dataset,datalabel ] = Process_VTED_Frequency_Space( time_length,fs );
-toc
-r=1:1; %´ú±í»ùµÄ¸öÊı£¬Ò²¾ÍÊÇrank£¬1~6¶¼ÊÔÒ»´Î
-rep_times = 1;
+r=1:10; 
+rep_times = 10;
 
 q = 0;
-
-% sigma = 0.0001;
 C_i = 0.0001;
 
 train_num = ceil(0.5*size(datalabel{1},1));
@@ -23,7 +19,7 @@ accuracy = zeros(length(r),rep_times);
 for r_i = 1:length(r)
     Re = zeros(1,rep_times);
     parfor k = 1:rep_times
-%-------------·Ö²âÊÔºÍÑµÁ·¼¯-------------%
+%-------------åˆ†æµ‹è¯•å’Œè®­ç»ƒé›†-------------%
         trainSet = cell(1,length(dataset));
         testSet = cell(1,length(dataset));
         trainLabel = cell(length(dataset),1);
@@ -43,7 +39,7 @@ for r_i = 1:length(r)
         testLabel = cell2mat(testLabel);
         
         
-%----------------¹éÒ»»¯£¬·ÀÖ¹¹ıÄâºÏ------------------%
+%----------------å½’ä¸€åŒ–ï¼Œé˜²æ­¢è¿‡æ‹Ÿåˆ------------------%
         for i = 1:size(trainSet,2)
             trainSet(:,i) = trainSet(:,i)/norm(trainSet(:,i));
         end
@@ -51,13 +47,12 @@ for r_i = 1:length(r)
             testSet(:,i) = testSet(:,i)/norm(testSet(:,i));
         end
 
-%--------------------ÓÃÑµÁ·Ñù±¾ÄâºÏ³öÖØ¹¹Òò×Óh-------------------%
+%--------------------ç”¨è®­ç»ƒæ ·æœ¬æ‹Ÿåˆå‡ºé‡æ„å› å­h-------------------%
         L = cell(1,length(dataset));
         id = 0;
         for i = 1:length(L)
-            trainSet0{i} = trainSet(:,id+1:id+size(trainSet0{i},2)); %ÕâÀïÊ¹ÓÃ¹éÒ»»¯Ö®ºóµÄÊı¾İ£¬Ö®Ç°µÄtrainSet0ÀïÃæµÄÊı¾İÃ»ÓÃÁË
+            trainSet0{i} = trainSet(:,id+1:id+size(trainSet0{i},2)); 
             id = id +size(trainSet0{i},2);
-%             [L{i},RMSE,~,Q]=lowrank_corr(trainSet0{i},r(r_i),sigma,epsilon,q);
             [L{i},RMSE,~,Q]=lowrank_corr_RQK(trainSet0{i},r(r_i),C_i,epsilon,q);
             [L{i},~]=qr(L{i},0);
             L{i} = L{i}(:,1:r(r_i));
@@ -72,7 +67,6 @@ for r_i = 1:length(r)
                         H = pinv(L)*testSet_tmp;
                         T = testSet - L*H;
                         T_sq = T.*T;
-%                         e = T - T.*exp(-T_sq/sigma);
                         e = T - T.*(1-T_sq./(T_sq+C_i));
                         tmp = H-H0;
                         if norm(tmp(:))<1e-7 || iter >100
@@ -84,19 +78,18 @@ for r_i = 1:length(r)
 
                     
 
-%----------------¼ÆËã²âÊÔÑù±¾ºÍÃ¿¸öÀàµÄ½»²æìØ£¬×î´ó½»²æìØÎª¹éÊôÀà-----------------%
+%----------------è®¡ç®—æµ‹è¯•æ ·æœ¬å’Œæ¯ä¸ªç±»çš„äº¤å‰ç†µï¼Œæœ€å¤§äº¤å‰ç†µä¸ºå½’å±ç±»-----------------%
                     corr = zeros(length(dataset),size(testSet,2));
                     r_ = r(r_i);
                     for i = 1:length(dataset)
                         tmp = testSet - L(:,((i-1)*r_+1):i*r_)*H(((i-1)*r_+1):i*r_,:);
-%                         corr(i,:) = sum(exp(-tmp.*tmp/sigma),1);
                         tmp_sq = tmp.*tmp;
                         corr(i,:) = sum((1-tmp_sq./(tmp_sq+C_i)),1);
                     end
                     [~,result_label]=max(corr,[],1);
                     result_label = result_label';
 
-%----------------------¼ÆËã×¼È·ÂÊ--------------------%
+%----------------------è®¡ç®—å‡†ç¡®ç‡--------------------%
         result = sum(result_label==testLabel)/length(testLabel);
         Re(k) = result;
     end
