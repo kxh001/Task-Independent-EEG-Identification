@@ -1,29 +1,25 @@
-function [L,R]=lowrank_corr_RQK(X,r,C_i,epsilon,q)
+function [B,R,RMSE]=lowrank_corr_RQK(X,r,C_i,epsilon,q)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                        GoDec+ Algotithm
+%                    GoDec+ Algotithm with RQ kernel
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%The code is revised from the code of GoDec provided by Tianyi Zhou
+%The code is revised from the code of GoDec+ provided by Xianghao Kong
 %INPUTS:
 %X: nxp data matrix with n samples and p features
-%rank: rank(L)<=rank
+%rank: rank(B)<=rank
 %q: >=0, power scheme modification, increasing it lead to better
 %OUTPUTS:
-%L:Low-rank part
+%B:BEEG data matrix
 %RMSE: Relative error
-%Q: Basis of the low-rank data L
+%R: REEG data matrix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %REFERENCE:
-%Kailing Guo, Liu Liu, Xiangmin Xu, Dong Xu, and Dacheng Tao, "GoDec+: Fast and Robust Low-rank Matrix
-%Decomposition Based on Maximum Correntropy", TNNLS 2017
-%Author: Kailing Guo
-
+%Xianghao Kong, Wanzeng Kong, Qiaonan Fan, "Task-Independent EEG Identification via Low-Rank Matrix Decomposition"
+%Author: Xianghao Kong
 
 %iteration parameters
-% rng('default')
+
 iter_max=1e+2;
-
-
 rel_err=[];
 
 X = X';
@@ -32,7 +28,7 @@ X = X';
 
 
 T = zeros(size(X));
-L = X;
+B = X;
 
     iter = 1;
     Y2=randn(n,r);
@@ -40,33 +36,32 @@ L = X;
     while true
         T_sq = T.*T;
         e = T - T.*(1-T_sq./(T_sq+C_i));
-%         e = T - T.*exp(-T.*T/sigma);
         X1=X-e;
 
-            %Update of L
+            %Update of B
             for i=1:q+1
                 Y1=X1*Y2;
                 Y2=X1'*Y1;
             end
             [Q,R]=qr(Y2,0);
             base = X1*Q;
-            L_new=base*Q';
+            B_new=base*Q';
             Y2 = Q;
 
-        T = X - L_new;
+        T = X - B_new;
 
-        L_diff = L_new - L;
-        stop_cri = (norm(L_diff(:))/norm(L(:)))^2;
+        B_diff = B_new - B;
+        stop_cri = (norm(B_diff(:))/norm(B(:)))^2;
         rel_err = [rel_err,stop_cri];
 
         if stop_cri < epsilon || iter >iter_max
             break;
         end
 
-        L = L_new;
+        B = B_new;
         iter = iter + 1;
     end
-    L = L_new;
-    R = X-L;
-    L = L';
+    B = B_new;
+    R = X-B;
+    B = B';
     R = R';
