@@ -5,7 +5,8 @@ tic
 time_length = 20;
 fs = 250;
 sub_num = 9;
-[ dataset,datalabel ] = Process_EEG_spectrogram_Frequency_Space( time_length,fs,sub_num );
+channel_num = 22;
+[ dataset,datalabel ] = Process_EEG_spectrogram_Frequency_Space( time_length,fs,sub_num,channel_num );
 r=1:10; 
 rep_times = 10;
 
