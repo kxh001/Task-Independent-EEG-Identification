@@ -1,6 +1,5 @@
-function [ dataset,datalabel ] = Process_EEG_spectrogram_Frequency_Space( time_length,fs )
+function [ dataset,datalabel ] = Process_EEG_spectrogram_Frequency_Space( time_length,fs,sub_num,channel_num )
 
-sub_num = 9;
 for i = 1:sub_num
     str_i = num2str(i);
     filename1 = 'XXX';
