@@ -1,7 +1,5 @@
-function [ slice ] = STFT( X,time_length )
+function [ slice ] = STFT( X,time_length,fs,channel_num )
 
-channel_num = 22; 
-fs = 250;
 windowsize = fs*time_length;
 window = rectwin(windowsize); 
 nfft = windowsize;
