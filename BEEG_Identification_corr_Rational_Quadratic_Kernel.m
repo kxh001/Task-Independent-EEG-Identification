@@ -55,7 +55,7 @@ for r_i = 1:length(r)
         for i = 1:length(B)
             trainSet0{i} = trainSet(:,id+1:id+size(trainSet0{i},2)); 
             id = id +size(trainSet0{i},2);
-            [B{i},~,~,~]=lowrank_corr_RQK(trainSet0{i},r(r_i),C_i,epsilon,q);
+            [B{i},~,~]=lowrank_corr_RQK(trainSet0{i},r(r_i),C_i,epsilon,q);
             [B{i},~]=qr(L{i},0);
             B{i} = B{i}(:,1:r(r_i));
         end
