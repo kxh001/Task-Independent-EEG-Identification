@@ -1,4 +1,4 @@
-function [B,R,RMSE]=lowrank_corr_RQK(X,r,C_i,epsilon,q)
+function [B,R]=lowrank_corr_RQK(X,r,C_i,epsilon,q)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                    GoDec+ Algotithm with RQ kernel
