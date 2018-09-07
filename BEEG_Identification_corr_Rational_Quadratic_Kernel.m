@@ -56,6 +56,18 @@ for r_i = 1:length(r)
             trainSet0{i} = trainSet(:,id+1:id+size(trainSet0{i},2)); 
             id = id +size(trainSet0{i},2);
             [B{i},~]=lowrank_corr_RQK(trainSet0{i},r(r_i),C_i,epsilon,q);
+            SEEG=trainSet0{i};
+            BEEG=L{i};
+            REEG=R{i};
+            iii=i;
+            if iii<6
+                subplot(3,5,iii);
+                imagesc(SEEG);axis off;title(strcat('SEEG-',num2str(iii)));
+                subplot(3,5,5+iii);
+                imagesc(BEEG);axis off;title('BEEG-',num2str(iii));
+                subplot(3,5,10+iii);
+                imagesc(REEG);axis off;title('REEG-',num2str(iii));
+            end
             [B{i},~]=qr(B{i},0);
             B{i} = B{i}(:,1:r(r_i));
         end
