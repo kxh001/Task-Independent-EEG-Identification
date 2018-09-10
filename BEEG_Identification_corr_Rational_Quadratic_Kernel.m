@@ -91,8 +91,6 @@ for r_i = 1:length(r)
                     end
 
                     
-
-%----------------计算测试样本和每个类的交叉熵，最大交叉熵为归属类-----------------%
                     corr = zeros(length(dataset),size(testSet,2));
                     r_ = r(r_i);
                     for i = 1:length(dataset)
@@ -103,7 +101,6 @@ for r_i = 1:length(r)
                     [~,result_label]=max(corr,[],1);
                     result_label = result_label';
 
-%----------------------计算准确率--------------------%
         result = sum(result_label==testLabel)/length(testLabel);
         Re(k) = result;
     end
