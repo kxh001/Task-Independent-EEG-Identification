@@ -21,7 +21,7 @@ accuracy = zeros(length(r),rep_times);
 for r_i = 1:length(r)
     Re = zeros(1,rep_times);
     parfor k = 1:rep_times
-%-------------分测试和训练集-------------%
+    
         trainSet = cell(1,length(dataset));
         testSet = cell(1,length(dataset));
         trainLabel = cell(length(dataset),1);
@@ -41,7 +41,6 @@ for r_i = 1:length(r)
         testLabel = cell2mat(testLabel);
         
         
-%----------------归一化，防止过拟合------------------%
         for i = 1:size(trainSet,2)
             trainSet(:,i) = trainSet(:,i)/norm(trainSet(:,i));
         end
@@ -49,7 +48,7 @@ for r_i = 1:length(r)
             testSet(:,i) = testSet(:,i)/norm(testSet(:,i));
         end
 
-%--------------------用训练样本拟合出重构因子h-------------------%
+
         B = cell(1,length(dataset));
         R = cell(1,length(dataset));
         id = 0;
@@ -73,14 +72,14 @@ for r_i = 1:length(r)
             B{i} = B{i}(:,1:r(r_i));
         end
            
-                    B = cell2mat(B);
-                    H0 = zeros(size(B,2),size(testSet,2));
+                    P = cell2mat(P);
+                    H0 = zeros(size(P,2),size(testSet,2));
                     iter = 1;
                     e = zeros(size(testSet));
                     while true
                         testSet_tmp = testSet-e;
-                        H = pinv(B)*testSet_tmp;
-                        T = testSet - B*H;
+                        H = pinv(P)*testSet_tmp;
+                        T = testSet - P*H;
                         T_sq = T.*T;
                         e = T - T.*(1-T_sq./(T_sq+C_i));
                         tmp = H-H0;
@@ -97,7 +96,7 @@ for r_i = 1:length(r)
                     corr = zeros(length(dataset),size(testSet,2));
                     r_ = r(r_i);
                     for i = 1:length(dataset)
-                        tmp = testSet - B(:,((i-1)*r_+1):i*r_)*H(((i-1)*r_+1):i*r_,:);
+                        tmp = testSet - P(:,((i-1)*r_+1):i*r_)*H(((i-1)*r_+1):i*r_,:);
                         tmp_sq = tmp.*tmp;
                         corr(i,:) = sum((1-tmp_sq./(tmp_sq+C_i)),1);
                     end
