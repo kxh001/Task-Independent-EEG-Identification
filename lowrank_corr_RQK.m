@@ -43,7 +43,7 @@ B = X;
                 Y1=X1*Y2;
                 Y2=X1'*Y1;
             end
-            [Q,R]=qr(Y2,0);
+            [Q,~]=qr(Y2,0);
             base = X1*Q;
             B_new=base*Q';
             Y2 = Q;
