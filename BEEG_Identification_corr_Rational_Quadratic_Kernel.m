@@ -72,14 +72,14 @@ for r_i = 1:length(r)
             B{i} = B{i}(:,1:r(r_i));
         end
            
-                    P = cell2mat(P);
-                    H0 = zeros(size(P,2),size(testSet,2));
+                    B = cell2mat(B);
+                    H0 = zeros(size(B,2),size(testSet,2));
                     iter = 1;
                     e = zeros(size(testSet));
                     while true
                         testSet_tmp = testSet-e;
-                        H = pinv(P)*testSet_tmp;
-                        T = testSet - P*H;
+                        H = pinv(B)*testSet_tmp;
+                        T = testSet - B*H;
                         T_sq = T.*T;
                         e = T - T.*(1-T_sq./(T_sq+C_i));
                         tmp = H-H0;
@@ -94,7 +94,7 @@ for r_i = 1:length(r)
                     corr = zeros(length(dataset),size(testSet,2));
                     r_ = r(r_i);
                     for i = 1:length(dataset)
-                        tmp = testSet - P(:,((i-1)*r_+1):i*r_)*H(((i-1)*r_+1):i*r_,:);
+                        tmp = testSet - B(:,((i-1)*r_+1):i*r_)*H(((i-1)*r_+1):i*r_,:);
                         tmp_sq = tmp.*tmp;
                         corr(i,:) = sum((1-tmp_sq./(tmp_sq+C_i)),1);
                     end
