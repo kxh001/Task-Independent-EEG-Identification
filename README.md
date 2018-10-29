@@ -9,4 +9,4 @@ Link：https://pan.baidu.com/s/1-t0kn_wspIoMCabWVOc1Ww      Code：5dan
 
 
 If you are looking for a Multi-Tasking EEG Dataset (MTED), you can contact the corresponding author with email below.
-\<br>E-mail: kongwanzeng@hdu.edu.cn
+\E-mail: kongwanzeng@hdu.edu.cn
