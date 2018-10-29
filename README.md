@@ -1,5 +1,8 @@
 # Task-Independent EEG-Identification via Low-Rank Matrix Decompsition
 Thanks to the GoDec+ code provided by Kailing Guo, we improve it by RQ kernel.
+If you use or modify the code, please quote references "Task-Independent EEG Identification via Low-Rank
+Matrix Decomposition"
+
 
 EEG Dataset access:
 
